@@ -9,26 +9,37 @@ from dataclasses import dataclass
 import random
 from typing import List
 
+sensor_locations = ['Living Room', 'Kitchen', 'Porch', 'Bedroom', 'Greenhouse',
+                    'Hallway', 'Elephant room']
+
 @dataclass
 class sensor:
     name: str
     temp: int
     humidity: int
-    def __init__(self, name: str, temp: int, humidity: int):
+    
+    def __init__(self, name: str, temp: int, humidity: int): #just initializes
         self.temp = temp
         self.humidity = humidity
-        self.name = name
-    def current_vals():
-        self.temp = self.temp + random.randint(-5,5) #temp fluctuates by 5 degrees
-        self.humidity = self.humidity + random.randint(-9,9) 
+        self.name = sensor_locations[random.randint(0, (len(sensor_locations) - 1))]
+        
+    def current_vals(self):
+        nt = self.temp + random.randint(-5,5) #new temperature
+        self.temp = nt if (nt > -273) else self.temp #kelvin cause why not
+        nh = self.humidity + random.randint(-3,3) #new humidity
+        self.humidity = nh if ((nh > 0) and (nh < 100)) else self.humidity #humidity only between 0-100
         
 @dataclass
 class yuser:
     usr_nem : str
     probes : List[int] #indexes into Sensors
+    visits : int
+    
     def __init__(self, nem: str):
         self.usr_nem = nem
         self.probes = []
+        self.visits = 0
+        
     def add_sensor(self, sensor_num: int):
         if ( not (sensor_num in self.probes)):
             self.probes.append(sensor_num)
@@ -41,12 +52,12 @@ Users : List[yuser] = []
     
 
 
-def read_sensor(sensor_id):
-    lim = len(Sensors)
-    if (sensor_id > lim):
-        return 'You get nothing'
-    else:
-        return (str(Sensors[sensor_id].temp) + ',' + str(Sensors[sensor_id].humidity))
+#def read_sensor(sensor_id):
+#    lim = len(Sensors)
+#    if (sensor_id > lim):
+#        return 'You get nothing'
+#    else:
+#        return (str(Sensors[sensor_id].temp) + ',' + str(Sensors[sensor_id].humidity))
     
 def associate_sensor(sensor, yuser):
     return 0
@@ -68,4 +79,4 @@ def static_test_setup():
         
             
         
-        
+    
